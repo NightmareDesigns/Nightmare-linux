@@ -4,7 +4,8 @@ Nightmare-infused Debian stable with a GRUB 2 “nightmare” theme, custom-kern
 ## What this repo contains
 - Scripts to configure and build a Debian stable live ISO (GRUB 2, EFI, installer enabled).
 - A minimal GRUB theme and menu entries for the Nightmare look.
-- A placeholder kernel config and helper script to build custom kernel .deb packages.
+- A kernel config tuned for common filesystems/firmware/RT and a helper script to build custom kernel .deb packages.
+- Desktop package lists, firmware coverage, and installer/live defaults to ship a usable XFCE session out of the box.
 
 ## Prereqs (Debian/Ubuntu host)
 ```
@@ -34,15 +35,22 @@ Resulting `.deb` files land in `build/kernel`.
 
 ## GRUB theming
 - Assets live in `config/grub/nightmare/`:
-  - `background.xpm`: matrix-style backdrop (static).
-  - `title.xpm`: blood-drip Nightmare title (static).
+  - `background.xpm`: dark neon backdrop.
+  - `title.xpm`: Nightmare title mark.
+  - `unicode.pf2`: bundled font for menu/title rendering.
   - `theme.txt`: colors and layout; references the assets above.
 - Menu entries live in `config/grub/grub.cfg`.
 - Re-run `./scripts/setup-live-build.sh` to sync assets into the live-build tree.
 
 Note: GRUB themes are static; true animation (matrix rain or dripping) would need a boot splash stage (e.g., plymouth) added later in the initramfs.
 
+## Desktop + installer defaults
+- Live-build package lists and hooks live under `config/live/`:
+  - `package-lists/`: base tools, firmware, and XFCE desktop packages.
+  - `hooks/normal/installer-defaults.hook.chroot`: seeds live-config defaults (user/locale/timezone), LightDM autologin, and a Debian Installer preseed.
+  - `includes.installer/preseed.cfg`: bundled into the installer image for consistent defaults.
+- `./scripts/setup-live-build.sh` copies these into the live-build config tree.
+
 ## Next steps
-- Flesh out the kernel config for required features (filesystem targets, firmware, RT, etc.).
-- Add branding assets (background, fonts) to `config/grub/nightmare/`.
-- Add package lists and hooks for desktop environment and installer defaults.
+- Add a plymouth splash that matches the GRUB theme.
+- Add automated smoke tests (boot + installer flow) in CI.

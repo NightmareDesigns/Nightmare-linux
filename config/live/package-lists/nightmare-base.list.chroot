@@ -1,0 +1,31 @@
+# Base utilities and recovery tools
+sudo
+ca-certificates
+curl
+wget
+git
+openssh-client
+bash-completion
+htop
+tmux
+less
+pciutils
+usbutils
+lsof
+iproute2
+iputils-ping
+dnsutils
+
+# Storage and filesystem tooling
+parted
+gparted
+btrfs-progs
+xfsprogs
+f2fs-tools
+exfatprogs
+ntfs-3g
+lvm2
+mdadm
+cryptsetup
+nvme-cli
+smartmontools

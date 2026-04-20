@@ -1,0 +1,8 @@
+# Broad firmware coverage for Wi-Fi, GPU, and peripherals
+firmware-linux
+firmware-linux-nonfree
+firmware-misc-nonfree
+firmware-iwlwifi
+firmware-realtek
+firmware-atheros
+firmware-amd-graphics
