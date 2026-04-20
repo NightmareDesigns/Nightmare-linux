@@ -33,7 +33,14 @@ Environment variables you can override:
 Resulting `.deb` files land in `build/kernel`.
 
 ## GRUB theming
-Edit theme assets in `config/grub/nightmare/` and menu entries in `config/grub/grub.cfg`. Re-run `./scripts/setup-live-build.sh` to sync into the live-build tree.
+- Assets live in `config/grub/nightmare/`:
+  - `background.xpm`: matrix-style backdrop (static).
+  - `title.xpm`: blood-drip Nightmare title (static).
+  - `theme.txt`: colors and layout; references the assets above.
+- Menu entries live in `config/grub/grub.cfg`.
+- Re-run `./scripts/setup-live-build.sh` to sync assets into the live-build tree.
+
+Note: GRUB themes are static; true animation (matrix rain or dripping) would need a boot splash stage (e.g., plymouth) added later in the initramfs.
 
 ## Next steps
 - Flesh out the kernel config for required features (filesystem targets, firmware, RT, etc.).
