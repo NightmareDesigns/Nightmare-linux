@@ -1,5 +1,7 @@
-title-text: "Nightmare Linux"
+desktop-image: "background.xpm"
 desktop-color: "#000000"
+title-image: "title.xpm"
+title-text: ""
 title-color: "#ff4d4d"
 message-color: "#e0e0e0"
 highlight-color: "#000000"
