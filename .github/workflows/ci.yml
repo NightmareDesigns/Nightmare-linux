@@ -1,0 +1,35 @@
+name: Build ISO
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            live-build grub-pc-bin grub-efi-amd64-bin mtools xorriso rsync \
+            build-essential bc bison flex libssl-dev libncurses-dev
+
+      - name: Add Nightmare package repository
+        run: |
+          echo "deb https://nightmaredesigns.github.io/nightmare-zsh-config ./" \
+            | sudo tee /etc/apt/sources.list.d/nightmare-zsh-config.list
+          sudo apt-get update
+
+      - name: Configure live-build
+        run: sudo ./scripts/setup-live-build.sh
+
+      - name: Build ISO
+        run: sudo ./scripts/build-iso.sh
