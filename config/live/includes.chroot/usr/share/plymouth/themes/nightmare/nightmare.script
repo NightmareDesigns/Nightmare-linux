@@ -1,0 +1,79 @@
+Window.SetBackgroundTopColor(0.02, 0.02, 0.03);
+Window.SetBackgroundBottomColor(0.04, 0.03, 0.05);
+
+# Backdrop and mark
+bg.image = Image("background.png");
+bg.sprite = Sprite(bg.image);
+bg.scale_w = Window.GetWidth() / bg.image.GetWidth();
+bg.scale_h = Window.GetHeight() / bg.image.GetHeight();
+bg.scale = bg.scale_w;
+if (bg.scale_h < bg.scale_w)
+  {
+    bg.scale = bg.scale_h;
+  }
+bg.x = Window.GetX() + (Window.GetWidth() - bg.image.GetWidth() * bg.scale) / 2;
+bg.y = Window.GetY() + (Window.GetHeight() - bg.image.GetHeight() * bg.scale) / 2;
+bg.sprite.SetScale(bg.scale, bg.scale);
+bg.sprite.SetPosition(bg.x, bg.y, -100);
+
+title.image = Image("title.png");
+title.sprite = Sprite(title.image);
+title.x = Window.GetX() + Window.GetWidth() / 2 - title.image.GetWidth() / 2;
+title.y = Window.GetY() + Window.GetHeight() * 0.18 - title.image.GetHeight() / 2;
+title.sprite.SetPosition(title.x, title.y, 10);
+
+# Progress bar
+progress.box_image = Image("progress_box.png");
+progress.box_sprite = Sprite(progress.box_image);
+progress.box_x = Window.GetX() + Window.GetWidth() / 2 - progress.box_image.GetWidth() / 2;
+progress.box_y = Window.GetY() + Window.GetHeight() * 0.82 - progress.box_image.GetHeight() / 2;
+progress.box_sprite.SetPosition(progress.box_x, progress.box_y, 20);
+
+progress.bar_image = Image("progress_bar.png");
+progress.bar_sprite = Sprite();
+progress.bar_height = progress.bar_image.GetHeight();
+progress.bar_y = progress.box_y + (progress.box_image.GetHeight() - progress.bar_height) / 2;
+progress.bar_sprite.SetPosition(progress.box_x + 1, progress.bar_y, 21);
+
+fun set_progress(progress_value)
+  {
+    width = Math.Int(progress.bar_image.GetWidth() * progress_value);
+    if (width < 1)
+      {
+        width = 1;
+      }
+    progress.bar_sprite.SetImage(progress.bar_image.Scale(width, progress.bar_height));
+  }
+
+set_progress(0);
+
+fun progress_callback (duration, progress_value)
+  {
+    set_progress(progress_value);
+  }
+
+Plymouth.SetBootProgressFunction(progress_callback);
+
+# Status text
+message.sprite = Sprite();
+message.sprite.SetPosition(Window.GetX() + Window.GetWidth() * 0.08, Window.GetY() + Window.GetHeight() * 0.9, 30);
+
+fun display_message_callback (text)
+  {
+    message.sprite.SetImage(Image.Text(text, 1, 0.46, 0.46));
+  }
+
+fun hide_message_callback (text)
+  {
+    message.sprite.SetImage(Image.Text("", 1, 0.46, 0.46));
+  }
+
+Plymouth.SetDisplayMessageFunction (display_message_callback);
+Plymouth.SetHideMessageFunction (hide_message_callback);
+
+fun quit_callback ()
+{
+  set_progress(1);
+}
+
+Plymouth.SetQuitFunction(quit_callback);

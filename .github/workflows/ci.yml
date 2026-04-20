@@ -1,0 +1,59 @@
+name: Build and Smoke Test ISO
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            live-build grub-pc-bin grub-efi-amd64-bin mtools xorriso rsync \
+            build-essential bc bison flex libssl-dev libncurses-dev
+
+      - name: Configure live-build
+        run: sudo ./scripts/setup-live-build.sh
+
+      - name: Build ISO
+        run: sudo ./scripts/build-iso.sh
+
+      - name: Fix ownership for artifacts
+        run: sudo chown -R "$USER:$USER" build
+
+      - name: Upload ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightmare-live-iso
+          path: build/live/*.iso
+          if-no-files-found: error
+
+  smoke-tests:
+    runs-on: ubuntu-latest
+    needs: build-iso
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-system-x86 qemu-utils xorriso
+
+      - name: Download ISO artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: nightmare-live-iso
+          path: build/live
+
+      - name: Run smoke tests (live + installer)
+        run: |
+          chmod +x scripts/smoke-tests.sh
+          ./scripts/smoke-tests.sh build/live/*.iso

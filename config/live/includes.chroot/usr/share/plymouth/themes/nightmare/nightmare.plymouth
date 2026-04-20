@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Nightmare
+Description=Nightmare neon splash to match the GRUB theme
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/nightmare
+ScriptFile=/usr/share/plymouth/themes/nightmare/nightmare.script
