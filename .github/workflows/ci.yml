@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build-iso:
     runs-on: ubuntu-latest
@@ -21,7 +24,7 @@ jobs:
 
       - name: Add Nightmare package repository
         run: |
-          echo "deb [trusted=yes] https://nightmaredesigns.github.io/nightmare-zsh-config ./" \
+          echo "deb https://nightmaredesigns.github.io/nightmare-zsh-config ./" \
             | sudo tee /etc/apt/sources.list.d/nightmare-zsh-config.list
           sudo apt-get update
 
