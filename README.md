@@ -24,6 +24,11 @@ Environment variables you can override:
 - `ISO_APP_NAME`, `ISO_VOLUME`
 - `BUILD_DIR` (default: build/live)
 
+Smoke test the resulting ISO with QEMU serial consoles:
+```
+./scripts/smoke-tests.sh build/live/*.iso
+```
+
 ## Custom kernel flow
 1) Put a full kernel `.config` in `config/kernel/nightmare.config` (copy from `/boot/config-$(uname -r)` and tweak).  
 2) Download/extract kernel sources to `build/kernel/linux` (e.g., from kernel.org).  
@@ -42,7 +47,10 @@ Resulting `.deb` files land in `build/kernel`.
 - Menu entries live in `config/grub/grub.cfg`.
 - Re-run `./scripts/setup-live-build.sh` to sync assets into the live-build tree.
 
-Note: GRUB themes are static; true animation (matrix rain or dripping) would need a boot splash stage (e.g., plymouth) added later in the initramfs.
+### Plymouth splash
+- Theme lives under `config/live/includes.chroot/usr/share/plymouth/themes/nightmare/` and reuses the GRUB backdrop/title.
+- `config/live/includes.chroot/etc/plymouth/plymouthd.conf` sets it as the default theme.
+- `config/live/hooks/normal/plymouth-theme.hook.chroot` runs `plymouth-set-default-theme -R nightmare` so the initramfs picks it up.
 
 ## Desktop + installer defaults
 - Live-build package lists and hooks live under `config/live/`:
@@ -51,6 +59,6 @@ Note: GRUB themes are static; true animation (matrix rain or dripping) would nee
   - `includes.installer/preseed.cfg`: bundled into the installer image for consistent defaults.
 - `./scripts/setup-live-build.sh` copies these into the live-build config tree.
 
-## Next steps
-- Add a plymouth splash that matches the GRUB theme.
-- Add automated smoke tests (boot + installer flow) in CI.
+## CI and automation
+- `.github/workflows/ci.yml` builds the live ISO on pushes/PRs and publishes it as an artifact, then boots the live image and installer via QEMU for smoke coverage.
+- `scripts/smoke-tests.sh` can be run locally against any built ISO to mirror the CI checks.

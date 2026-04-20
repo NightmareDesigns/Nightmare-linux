@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+
+echo "[nightmare] enabling Plymouth splash theme"
+
+if command -v plymouth-set-default-theme >/dev/null 2>&1; then
+  plymouth-set-default-theme -R nightmare
+else
+  # Fallback: ensure the theme is recorded even if helpers are missing
+  update-initramfs -u
+fi

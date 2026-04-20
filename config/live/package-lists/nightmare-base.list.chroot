@@ -29,3 +29,8 @@ mdadm
 cryptsetup
 nvme-cli
 smartmontools
+
+# Boot splash + renderer
+plymouth
+plymouth-themes
+plymouth-label
