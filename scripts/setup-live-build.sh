@@ -4,7 +4,9 @@ set -euo pipefail
 BUILD_DIR="${BUILD_DIR:-build/live}"
 DIST="${DIST:-bookworm}"
 MIRROR="${MIRROR:-http://deb.debian.org/debian}"
-SECURITY_MIRROR="${SECURITY_MIRROR:-http://security.debian.org/debian-security}"
+SECURITY_MIRROR="${SECURITY_MIRROR:-https://deb.debian.org/debian-security}"
+SECURITY_SUITE="${SECURITY_SUITE:-${DIST}-security}"
+SECURITY_COMPONENTS="${SECURITY_COMPONENTS:-main contrib non-free non-free-firmware}"
 ISO_APP_NAME="${ISO_APP_NAME:-Nightmare Linux}"
 ISO_VOLUME="${ISO_VOLUME:-NIGHTMARE_LIVE}"
 LB_OPTS=(
@@ -38,7 +40,7 @@ if lb config --help 2>/dev/null | grep -q -- "--updates"; then
   LB_OPTS+=(--updates true)
 fi
 if lb config --help 2>/dev/null | grep -q -- "--security"; then
-  LB_OPTS+=(--security true)
+  LB_OPTS+=(--security false)
 fi
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -47,6 +49,14 @@ cd "${BUILD_DIR}"
 
 echo "[nightmare] configuring live-build in ${BUILD_DIR}"
 lb config "${LB_OPTS[@]}"
+
+ARCHIVE_DIR="config/archives"
+mkdir -p "${ARCHIVE_DIR}"
+for target in chroot binary; do
+  cat >"${ARCHIVE_DIR}/security.list.${target}" <<EOF
+deb ${SECURITY_MIRROR} ${SECURITY_SUITE} ${SECURITY_COMPONENTS}
+EOF
+done
 
 # Drop Nightmare GRUB theme and menu entries into includes
 THEME_SRC="${ROOT}/config/grub/nightmare"
