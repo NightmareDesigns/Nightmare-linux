@@ -1,0 +1,29 @@
+# Desktop experience
+task-xfce-desktop
+xfce4-goodies
+xfce4-terminal
+network-manager
+network-manager-gnome
+lightdm
+lightdm-gtk-greeter
+lightdm-gtk-greeter-settings
+pipewire-audio
+wireplumber
+pavucontrol
+bluez
+blueman
+xserver-xorg
+xserver-xorg-video-all
+xserver-xorg-input-all
+mesa-utils
+
+# Applications and polish
+firefox-esr
+thunar-archive-plugin
+file-roller
+gnome-disk-utility
+fonts-dejavu
+fonts-noto-core
+fonts-noto-color-emoji
+adwaita-icon-theme
+papirus-icon-theme

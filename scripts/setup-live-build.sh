@@ -21,8 +21,6 @@ LB_OPTS=(
   --mirror-binary "${MIRROR}"
   --mirror-binary-security "${SECURITY_MIRROR}"
   --apt-indices false
-  --updates true
-  --security true
   --firmware-binary true
   --firmware-chroot true
   --linux-flavours amd64
@@ -32,6 +30,15 @@ LB_OPTS=(
 if ! command -v lb >/dev/null 2>&1; then
   echo "live-build (lb) is required. Install with: sudo apt-get install -y live-build" >&2
   exit 1
+fi
+
+# Older live-build builds do not support --updates/--security; add them only
+# when available so the script works across Debian and Ubuntu hosts.
+if lb config --help 2>/dev/null | grep -q -- "--updates"; then
+  LB_OPTS+=(--updates true)
+fi
+if lb config --help 2>/dev/null | grep -q -- "--security"; then
+  LB_OPTS+=(--security true)
 fi
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -57,6 +64,25 @@ KERNEL_CFG_SRC="${ROOT}/config/kernel/nightmare.config"
 KERNEL_CFG_DEST="config/includes.chroot/usr/src/nightmare/nightmare.config"
 mkdir -p "$(dirname "${KERNEL_CFG_DEST}")"
 cp "${KERNEL_CFG_SRC}" "${KERNEL_CFG_DEST}"
+
+# Copy package lists, hooks, and installer/live defaults
+LIVE_SRC="${ROOT}/config/live"
+if [ -d "${LIVE_SRC}/package-lists" ]; then
+  mkdir -p config/package-lists
+  rsync -a --delete "${LIVE_SRC}/package-lists/" config/package-lists/
+fi
+if [ -d "${LIVE_SRC}/hooks" ]; then
+  mkdir -p config/hooks
+  rsync -a --delete "${LIVE_SRC}/hooks/" config/hooks/
+fi
+if [ -d "${LIVE_SRC}/includes.chroot" ]; then
+  mkdir -p config/includes.chroot
+  rsync -a --delete "${LIVE_SRC}/includes.chroot/" config/includes.chroot/
+fi
+if [ -d "${LIVE_SRC}/includes.installer" ]; then
+  mkdir -p config/includes.installer
+  rsync -a --delete "${LIVE_SRC}/includes.installer/" config/includes.installer/
+fi
 
 cat <<'EOF'
 [nightmare] live-build configured.
