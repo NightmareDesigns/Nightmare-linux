@@ -25,6 +25,7 @@ LB_OPTS=(
   --firmware-chroot true
   # Disable live-build automatic kernel resolver because some host versions
   # fetch deprecated Contents-amd64.gz metadata and fail on bookworm.
+  # Kernel install is handled via config/live/package-lists/nightmare-base.list.chroot.
   --linux-packages none
 )
 
