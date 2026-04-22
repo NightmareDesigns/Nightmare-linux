@@ -5,7 +5,7 @@ BUILD_DIR="${BUILD_DIR:-build/live}"
 DIST="${DIST:-bookworm}"
 MIRROR="${MIRROR:-http://deb.debian.org/debian}"
 SECURITY_MIRROR="${SECURITY_MIRROR:-http://security.debian.org/debian-security}"
-ENABLE_SECURITY_REPO="${ENABLE_SECURITY_REPO:-${SECURITY:-true}}"
+ENABLE_SECURITY_REPO="${ENABLE_SECURITY_REPO:-true}"
 ISO_APP_NAME="${ISO_APP_NAME:-Nightmare Linux}"
 ISO_VOLUME="${ISO_VOLUME:-NIGHTMARE_LIVE}"
 LB_OPTS=(
@@ -25,7 +25,8 @@ LB_OPTS=(
   --firmware-chroot true
   # Disable live-build automatic kernel resolver because some host versions
   # fetch deprecated Contents-amd64.gz metadata and fail on bookworm.
-  # Kernel install is handled via config/live/package-lists/nightmare-base.list.chroot.
+  # Kernel install (linux-image-amd64) is handled via
+  # config/live/package-lists/nightmare-base.list.chroot.
   --linux-packages none
 )
 
