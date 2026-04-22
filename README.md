@@ -21,6 +21,7 @@ sudo apt-get install -y live-build grub-pc-bin grub-efi-amd64-bin mtools xorriso
 Environment variables you can override:
 - `DIST` (default: bookworm)
 - `MIRROR`, `SECURITY_MIRROR`
+- `SECURITY` (default: true; set to `false` if your host live-build uses an outdated Debian security suite path)
 - `ISO_APP_NAME`, `ISO_VOLUME`
 - `BUILD_DIR` (default: build/live)
 

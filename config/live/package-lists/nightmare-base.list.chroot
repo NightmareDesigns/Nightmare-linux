@@ -1,4 +1,5 @@
 # Base utilities and recovery tools
+linux-image-amd64
 sudo
 ca-certificates
 curl
