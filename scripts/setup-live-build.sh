@@ -5,7 +5,7 @@ BUILD_DIR="${BUILD_DIR:-build/live}"
 DIST="${DIST:-bookworm}"
 MIRROR="${MIRROR:-http://deb.debian.org/debian}"
 SECURITY_MIRROR="${SECURITY_MIRROR:-http://security.debian.org/debian-security}"
-SECURITY="${SECURITY:-true}"
+ENABLE_SECURITY_REPO="${ENABLE_SECURITY_REPO:-${SECURITY:-true}}"
 ISO_APP_NAME="${ISO_APP_NAME:-Nightmare Linux}"
 ISO_VOLUME="${ISO_VOLUME:-NIGHTMARE_LIVE}"
 LB_OPTS=(
@@ -40,7 +40,7 @@ if lb config --help 2>/dev/null | grep -q -- "--updates"; then
   LB_OPTS+=(--updates true)
 fi
 if lb config --help 2>/dev/null | grep -q -- "--security"; then
-  if [ "${SECURITY}" = "true" ]; then
+  if [ "${ENABLE_SECURITY_REPO}" = "true" ]; then
     LB_OPTS+=(--mirror-binary-security "${SECURITY_MIRROR}")
     LB_OPTS+=(--security true)
   else

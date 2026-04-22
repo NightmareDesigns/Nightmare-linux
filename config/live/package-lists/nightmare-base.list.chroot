@@ -1,4 +1,5 @@
 # Base utilities and recovery tools
+# The live-build config currently targets amd64 only.
 linux-image-amd64
 sudo
 ca-certificates
