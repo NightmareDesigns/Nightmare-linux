@@ -20,9 +20,11 @@ LB_OPTS=(
   --iso-volume "${ISO_VOLUME}"
   --mirror-bootstrap "${MIRROR}"
   --mirror-binary "${MIRROR}"
-  --apt-indices true
+  --apt-indices false
   --firmware-binary true
   --firmware-chroot true
+  # Disable live-build automatic kernel resolver because some host versions
+  # fetch deprecated Contents-amd64.gz metadata and fail on bookworm.
   --linux-packages none
 )
 
