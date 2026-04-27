@@ -1,8 +1,8 @@
 # Nightmare-linux
-Nightmare-infused Debian stable with a GRUB 2 “nightmare” theme, custom-kernel hook, and live ISO (with installer).
+Nightmare-infused Debian stable with a GRUB 2 "nightmare" theme, custom-kernel hook, and live ISO.
 
 ## What this repo contains
-- Scripts to configure and build a Debian stable live ISO (GRUB 2, EFI, installer enabled).
+- Scripts to configure and build a Debian stable live ISO (GRUB 2, EFI).
 - A minimal GRUB theme and menu entries for the Nightmare look.
 - A kernel config tuned for common filesystems/firmware/RT and a helper script to build custom kernel .deb packages.
 - Desktop package lists, firmware coverage, and installer/live defaults to ship a usable XFCE session out of the box.
@@ -45,13 +45,13 @@ Resulting `.deb` files land in `build/kernel`.
 
 Note: GRUB themes are static; true animation (matrix rain or dripping) would need a boot splash stage (e.g., plymouth) added later in the initramfs.
 
-## Desktop + installer defaults
+## Desktop + live defaults
 - Live-build package lists and hooks live under `config/live/`:
   - `package-lists/`: base tools, firmware, and XFCE desktop packages.
-  - `hooks/normal/installer-defaults.hook.chroot`: seeds live-config defaults (user/locale/timezone), LightDM autologin, and a Debian Installer preseed.
-  - `includes.installer/preseed.cfg`: bundled into the installer image for consistent defaults.
+  - `hooks/normal/installer-defaults.hook.chroot`: seeds live-config defaults (user/locale/timezone) and LightDM autologin.
 - `./scripts/setup-live-build.sh` copies these into the live-build config tree.
 
 ## Next steps
 - Add a plymouth splash that matches the GRUB theme.
-- Add automated smoke tests (boot + installer flow) in CI.
+- Add automated smoke tests (boot flow) in CI.
+- Re-enable debian-installer once Debian fixes the Contents-amd64.gz 404 issue.
