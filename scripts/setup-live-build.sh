@@ -14,7 +14,7 @@ LB_OPTS=(
   --archive-areas "main contrib non-free non-free-firmware"
   --architectures amd64
   --binary-images iso-hybrid
-  --debian-installer live
+  --debian-installer false
   --bootloader grub-efi
   --iso-application "${ISO_APP_NAME}"
   --iso-volume "${ISO_VOLUME}"
@@ -86,10 +86,6 @@ fi
 if [ -d "${LIVE_SRC}/includes.chroot" ]; then
   mkdir -p config/includes.chroot
   rsync -a --delete "${LIVE_SRC}/includes.chroot/" config/includes.chroot/
-fi
-if [ -d "${LIVE_SRC}/includes.installer" ]; then
-  mkdir -p config/includes.installer
-  rsync -a --delete "${LIVE_SRC}/includes.installer/" config/includes.installer/
 fi
 
 cat <<'EOF'

@@ -8,6 +8,9 @@ on:
 permissions:
   contents: read
 
+env:
+  DIST: bookworm
+
 jobs:
   build-iso:
     runs-on: ubuntu-latest
@@ -23,7 +26,17 @@ jobs:
             build-essential bc bison flex libssl-dev libncurses-dev
 
       - name: Configure live-build
-        run: sudo ENABLE_SECURITY_REPO=false ./scripts/setup-live-build.sh
+        run: sudo DIST="${DIST}" ENABLE_SECURITY_REPO=false ./scripts/setup-live-build.sh
 
       - name: Build ISO
-        run: sudo ./scripts/build-iso.sh
+        run: sudo DIST="${DIST}" ./scripts/build-iso.sh
+
+      - name: Fix ownership for artifacts
+        run: sudo chown -R "$USER:$USER" build
+
+      - name: Upload ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightmare-live-iso
+          path: build/live/*.iso
+          if-no-files-found: error
