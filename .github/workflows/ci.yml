@@ -33,7 +33,7 @@ jobs:
           sudo apt-get update
 
       - name: Configure live-build
-        run: sudo DIST="${DIST}" ./scripts/setup-live-build.sh
+        run: sudo DIST="${DIST}" ENABLE_SECURITY_REPO=false ./scripts/setup-live-build.sh
 
       - name: Build ISO
         run: sudo DIST="${DIST}" ./scripts/build-iso.sh

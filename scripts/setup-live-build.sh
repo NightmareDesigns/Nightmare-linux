@@ -4,9 +4,10 @@ set -euo pipefail
 BUILD_DIR="${BUILD_DIR:-build/live}"
 DIST="${DIST:-bookworm}"
 MIRROR="${MIRROR:-http://deb.debian.org/debian}"
-SECURITY_MIRROR="${SECURITY_MIRROR:-https://deb.debian.org/debian-security}"
+SECURITY_MIRROR="${SECURITY_MIRROR:-http://security.debian.org/debian-security}"
 SECURITY_SUITE="${SECURITY_SUITE:-${DIST}-security}"
 SECURITY_COMPONENTS="${SECURITY_COMPONENTS:-main contrib non-free non-free-firmware}"
+ENABLE_SECURITY_REPO="${ENABLE_SECURITY_REPO:-true}"
 ISO_APP_NAME="${ISO_APP_NAME:-Nightmare Linux}"
 ISO_VOLUME="${ISO_VOLUME:-NIGHTMARE_LIVE}"
 LB_OPTS=(
@@ -21,12 +22,14 @@ LB_OPTS=(
   --iso-volume "${ISO_VOLUME}"
   --mirror-bootstrap "${MIRROR}"
   --mirror-binary "${MIRROR}"
-  --mirror-binary-security "${SECURITY_MIRROR}"
   --apt-indices false
   --firmware-binary true
   --firmware-chroot true
-  --linux-flavours amd64
-  --linux-packages linux-image
+  # Disable live-build automatic kernel resolver because some host versions
+  # fetch deprecated Contents-amd64.gz metadata and fail on bookworm.
+  # Kernel install (linux-image-amd64) is handled via
+  # config/live/package-lists/nightmare-base.list.chroot.
+  --linux-packages none
 )
 
 if ! command -v lb >/dev/null 2>&1; then
@@ -40,7 +43,12 @@ if lb config --help 2>/dev/null | grep -q -- "--updates"; then
   LB_OPTS+=(--updates true)
 fi
 if lb config --help 2>/dev/null | grep -q -- "--security"; then
-  LB_OPTS+=(--security false)
+  if [ "${ENABLE_SECURITY_REPO}" = "true" ]; then
+    LB_OPTS+=(--mirror-binary-security "${SECURITY_MIRROR}")
+    LB_OPTS+=(--security true)
+  else
+    LB_OPTS+=(--security false)
+  fi
 fi
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -50,13 +58,15 @@ cd "${BUILD_DIR}"
 echo "[nightmare] configuring live-build in ${BUILD_DIR}"
 lb config "${LB_OPTS[@]}"
 
-ARCHIVE_DIR="config/archives"
-mkdir -p "${ARCHIVE_DIR}"
-for target in chroot binary; do
-  cat >"${ARCHIVE_DIR}/security.list.${target}" <<EOF
+if [ "${ENABLE_SECURITY_REPO}" = "true" ]; then
+  ARCHIVE_DIR="config/archives"
+  mkdir -p "${ARCHIVE_DIR}"
+  for target in chroot binary; do
+    cat >"${ARCHIVE_DIR}/security.list.${target}" <<EOF
 deb ${SECURITY_MIRROR} ${SECURITY_SUITE} ${SECURITY_COMPONENTS}
 EOF
-done
+  done
+fi
 
 # Drop Nightmare GRUB theme and menu entries into includes
 THEME_SRC="${ROOT}/config/grub/nightmare"
