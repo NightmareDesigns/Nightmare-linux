@@ -14,7 +14,7 @@ LB_OPTS=(
   --archive-areas "main contrib non-free non-free-firmware"
   --architectures amd64
   --binary-images iso-hybrid
-  --debian-installer live
+  --debian-installer false
   --bootloader grub-efi
   --iso-application "${ISO_APP_NAME}"
   --iso-volume "${ISO_VOLUME}"
