@@ -19,11 +19,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            live-build grub-pc-bin grub-efi-amd64-bin mtools xorriso rsync \
+            live-build grub-pc-bin grub-efi-amd64-bin mtools xorriso rsync syslinux-utils \
             build-essential bc bison flex libssl-dev libncurses-dev
 
       - name: Configure live-build
-        run: sudo ENABLE_SECURITY_REPO=false ./scripts/setup-live-build.sh
+        run: sudo ENABLE_SECURITY_REPO=false DEBIAN_INSTALLER=false ./scripts/setup-live-build.sh
 
       - name: Build ISO
         run: sudo ./scripts/build-iso.sh

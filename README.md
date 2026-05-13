@@ -10,7 +10,7 @@ Nightmare-infused Debian stable with a GRUB 2 “nightmare” theme, custom-kern
 ## Prereqs (Debian/Ubuntu host)
 ```
 sudo apt-get update
-sudo apt-get install -y live-build grub-pc-bin grub-efi-amd64-bin mtools xorriso rsync build-essential bc bison flex libssl-dev libncurses-dev
+sudo apt-get install -y live-build grub-pc-bin grub-efi-amd64-bin mtools xorriso rsync syslinux-utils build-essential bc bison flex libssl-dev libncurses-dev
 ```
 
 ## Quick start: live ISO
@@ -22,6 +22,7 @@ Environment variables you can override:
 - `DIST` (default: bookworm)
 - `MIRROR`, `SECURITY_MIRROR`
 - `ENABLE_SECURITY_REPO` (default: true; set to `false` if your host live-build uses an outdated Debian security suite path)
+- `DEBIAN_INSTALLER` (default: live; set to `false` to skip Debian installer integration)
 - `ISO_APP_NAME`, `ISO_VOLUME`
 - `BUILD_DIR` (default: build/live)
 

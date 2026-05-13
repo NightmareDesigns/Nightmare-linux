@@ -6,6 +6,7 @@ DIST="${DIST:-bookworm}"
 MIRROR="${MIRROR:-http://deb.debian.org/debian}"
 SECURITY_MIRROR="${SECURITY_MIRROR:-http://security.debian.org/debian-security}"
 ENABLE_SECURITY_REPO="${ENABLE_SECURITY_REPO:-true}"
+DEBIAN_INSTALLER="${DEBIAN_INSTALLER:-live}"
 ISO_APP_NAME="${ISO_APP_NAME:-Nightmare Linux}"
 ISO_VOLUME="${ISO_VOLUME:-NIGHTMARE_LIVE}"
 LB_OPTS=(
@@ -14,7 +15,7 @@ LB_OPTS=(
   --archive-areas "main contrib non-free non-free-firmware"
   --architectures amd64
   --binary-images iso-hybrid
-  --debian-installer live
+  --debian-installer "${DEBIAN_INSTALLER}"
   --bootloader grub-efi
   --iso-application "${ISO_APP_NAME}"
   --iso-volume "${ISO_VOLUME}"
